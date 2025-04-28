@@ -1,0 +1,44 @@
+name: Daily Competitive Programming Problem Notification
+
+# ワークフローが実行されるトリガー
+on:
+  schedule:
+    # cron スケジュール (UTC基準)
+    # 以下の例は、毎日 00:00 UTC (日本時間 午前9時) に実行
+    - cron: '0 0 * * *'
+
+  # GitHubのActionsタブから手動で実行できるようにする (テストに便利)
+  workflow_dispatch:
+
+jobs:
+  # ジョブの定義 (ここでは 'notify' という名前のジョブを1つ定義)
+  notify:
+    # ジョブを実行する環境 (最新のUbuntuを使用)
+    runs-on: ubuntu-latest
+
+    # ジョブのステップ (実行される一連のタスク)
+    steps:
+      # ステップ1: リポジトリのコードをチェックアウトする
+      # これにより、ワークフロー内でリポジトリ内のファイル (daily_problem.pyなど) にアクセスできる
+      - name: Checkout repository code
+        uses: actions/checkout@v4 # チェックアウト用のアクション (v4を使用)
+
+      # ステップ2: Python環境をセットアップする
+      - name: Set up Python environment
+        uses: actions/setup-python@v5 # Pythonセットアップ用のアクション (v5を使用)
+        with:
+          python-version: '3.10' # 使用したいPythonのバージョンを指定
+
+      # ステップ3: Pythonの依存ライブラリをインストールする
+      # (daily_problem.py で requests ライブラリを使う場合)
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests # 他に必要なライブラリがあればここに追加
+
+      # ステップ4: Pythonスクリプトを実行してSlackに通知する
+      - name: Run script to fetch and notify problem
+        env:
+          # GitHub Secretsに登録したWebhook URLを環境変数としてスクリプトに渡す
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python daily_problem.py
