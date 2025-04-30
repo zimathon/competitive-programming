@@ -11,7 +11,7 @@ ATCODER_TASK_URL_FORMAT = "https://atcoder.jp/contests/{contest_id}/tasks/{probl
 
 # --- 設定 ---
 # どのレベルの問題を対象とするか (例: 'B', 'C')
-TARGET_PROBLEM_LEVELS = ['B', 'C']
+TARGET_PROBLEM_LEVELS = ['C', 'D']
 # どのコンテスト種別を対象とするか (例: 'abc' for AtCoder Beginner Contest)
 TARGET_CONTEST_PREFIX = 'abc'
 # ----------------
